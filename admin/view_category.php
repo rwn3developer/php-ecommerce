@@ -20,7 +20,7 @@
                     setTimeout(function() {
                         window.location.href = 'view_category.php';
                     }, 2000);
-                  </script>";
+                  </script>"; 
         }
     }
 
