@@ -24,11 +24,7 @@
                     }, 2000);
                   </script>";
         }
-        
-    
     }
-    
-
 ?>
 
 <?php include('header.php') ?>
