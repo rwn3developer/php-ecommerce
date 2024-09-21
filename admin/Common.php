@@ -50,9 +50,14 @@
         //category update
         function categoryUpdate($id,$cat){
             $res = mysqli_query($this->con,"UPDATE `category` SET `category_name`='$cat' WHERE `id`='$id'");
-
             return $res;
         }
+
+        function productInsert($category,$product,$file_name,$price,$description){
+            $res = mysqli_query($this->con,"INSERT INTO `product`(`categoryId`, `product`, `image`, `price`,`description`) VALUES ('$category','$product','$file_name','$price','$description')");
+            return $res;
+        }
+
 
     }
 
