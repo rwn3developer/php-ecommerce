@@ -8,69 +8,57 @@
 
     $categoryRecord = $common->categoryView();
 
-
-    
+    if(isset($_GET['editId'])){
+        $id = $_GET['editId'];
+        $productsingle = $common->productFetchSingleRecord($id);
+    }
 
     if(isset($_POST['submit'])){
-        $category = $_POST['category'];
-
         $target_dir = "uploads/"; // Make sure this folder is writable
         $target_file = $target_dir . basename($_FILES["image"]["name"]);
-        $uploadOk = 1;
-        $fileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+        $editid = $_POST['editid'];
+        $category = $_POST['category'];
+        $product = $_POST['product'];
+        $price = $_POST['price'];
+        $description = $_POST['description'];
 
-        // Check if file already exists
-        if (file_exists($target_file)) {
-            echo "Sorry, file already exists.";
-            $uploadOk = 0;
-        }
+        if($_FILES["image"]["name"]){
+                if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
+                   
+                   
+                    $file_name = "./uploads/".basename($_FILES["image"]["name"]);
+                    
 
-        // Check file size (limit set to 5MB)
-        if ($_FILES["image"]["size"] > 5000000) {
-            echo "Sorry, your file is too large.";
-            $uploadOk = 0;
-        }
-
-        // Allow certain file formats
-        $allowed_types = array("jpg", "png", "jpeg", "gif", "pdf");
-        if (!in_array($fileType, $allowed_types)) {
-            echo "Sorry, only JPG, JPEG, PNG, GIF, and PDF files are allowed.";
-            $uploadOk = 0;
-        }
-
-        // Check if everything is ok before uploading the file
-        if ($uploadOk == 0) {
-            echo "Sorry, your file was not uploaded.";
-        } else {
-            if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
-
-                $category = $_POST['category'];
-                $product = $_POST['product'];
-                $file_name = "./uploads/".basename($_FILES["image"]["name"]);
-                $price = $_POST['price'];
-                $description = $_POST['description'];
-
-
-                $res = $common->productInsert($category,$product,$file_name,$price,$description);
-                $msg= "";
-                if ($res) {
-                    $msg = "Product successfully insert";
-                    echo "<script>
-                            setTimeout(function() {
-                                window.location.href = 'view_category.php';
-                            }, 2000);
-                        </script>";
+                    $res = $common->productUpdate($editid,$category,$product,$file_name,$price,$description);
+                    $msg= "";
+                    if ($res) {
+                        $msg = "Product successfully insert";
+                        echo "<script>
+                                setTimeout(function() {
+                                    window.location.href = 'view_product.php';
+                                }, 2000);
+                            </script>";
+                    }
                 }
-
                 
-            } else {
-                echo "Sorry, there was an error uploading your file.";
+
+
+        }else{
+            $file_name = "";
+            $res = $common->productUpdate($editid,$category,$product,$file_name,$price,$description);
+            $msg= "";
+            if ($res) {
+                $msg = "Product successfully insert";
+                echo "<script>
+                        setTimeout(function() {
+                            window.location.href = 'view_product.php';
+                        }, 2000);
+                    </script>";
             }
         }
-
-
         
     }
+
 ?>
 
 <?php include('header.php') ?>
@@ -113,8 +101,11 @@
                                 </div>
                             <?php } ?>
                             <form method="post"  enctype="multipart/form-data"  class="form-horizontal">
+
+                                <input type="hidden" name="editid" value="<?php echo $productsingle['id'] ?>">
+
                                 <div class="card-body">
-                                    <h4 class="card-title">Add Category</h4>
+                                    <h4 class="card-title">Edit Product</h4>
                                     <div class="form-group row">
                                         <label for="fname" class="col-sm-3 text-right control-label col-form-label">Category</label>
                                         <div class="col-sm-9">
@@ -123,7 +114,13 @@
                                                 <?php 
                                                     foreach($categoryRecord as $row) {
                                                 ?>
-                                                    <option value="<?php echo $row['id'] ?>"><?php echo $row['category_name'] ?></option>
+
+                                                    <?php if($row['id']==$productsingle['categoryId']) { ?>
+                                                        <option selected value="<?php echo $row['id'] ?>"><?php echo $row['category_name'] ?></option> 
+                                                    <?php } else { ?>
+                                                        <option value="<?php echo $row['id'] ?>"><?php echo $row['category_name'] ?></option>
+                                                    <?php } ?>
+                                                        
                                                 <?php } ?>
                                             </select>
                                         </div>
@@ -132,7 +129,7 @@
                                     <div class="form-group row">
                                         <label for="fname" class="col-sm-3 text-right control-label col-form-label">Product</label>
                                         <div class="col-sm-9">
-                                            <input type="text" name="product" class="form-control" id="fname" name="product" placeholder="Product Name Here">
+                                            <input type="text" name="product" class="form-control" id="fname" name="product" value="<?php echo $productsingle['product'] ?>" placeholder="Product Name Here">
                                         </div>
                                     </div>
 
@@ -140,20 +137,21 @@
                                         <label for="fname" class="col-sm-3 text-right control-label col-form-label">Image</label>
                                         <div class="col-sm-9">
                                             <input type="file" name="image" class="form-control"/>
+                                            <img src="<?php echo $productsingle['image'] ?>" width="100" alt="">
                                         </div>
                                     </div>
 
                                     <div class="form-group row">
                                         <label for="fname" class="col-sm-3 text-right control-label col-form-label">Price</label>
                                         <div class="col-sm-9">
-                                            <input type="number" name="price" class="form-control"/>
+                                            <input type="number" name="price" value="<?php echo $productsingle['price'] ?>"  class="form-control"/>
                                         </div>
                                     </div>
 
                                     <div class="form-group row">
                                         <label for="fname" class="col-sm-3 text-right control-label col-form-label">Description</label>
                                         <div class="col-sm-9">
-                                            <input type="text" name="description" class="form-control"/>
+                                            <input type="text" name="description" value="<?php echo $productsingle['description'] ?>"  class="form-control"/>
                                         </div>
                                     </div>
                                     

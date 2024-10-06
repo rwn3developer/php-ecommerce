@@ -1,4 +1,7 @@
-<?php include('header.php'); ?>
+<?php
+    include('checkUser.php');
+    include('header.php'); 
+?>
 
 <div class="page-wrapper">
             <!-- ============================================================== -->
