@@ -131,6 +131,26 @@
             }
         }
         
+
+        function addCart($userid,$productid,$product,$image,$price,$qty){
+            $res = mysqli_query($this->con,"INSERT INTO `cart`(`userId`, `productId`, `name`, `image`, `price`, `qty`) VALUES ('$userid','$productid','$product','$image','$price','$qty')");
+            return $res;
+        }
+
+        function viewCart($userid){
+            $res = mysqli_query($this->con,"SELECT * FROM `cart` WHERE `userid`='$userid'");
+            $record = array();
+            while($row = mysqli_fetch_array($res)){
+                $record[] = $row;
+            }
+            return $record;
+        }
+
+        function deleteCart($deleteid){
+            $res = mysqli_query($this->con,"DELETE FROM `cart` WHERE `id`='$deleteid'");
+
+            return $res;
+        }
     }
 
 ?>

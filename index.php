@@ -32,11 +32,21 @@
             $_SESSION['address'] = $data['address'];
             $_SESSION['role'] = $data['role'];
             $msg = "Successfully Login";
-            echo "<script>
+
+            if($data['role']=="admin"){
+                echo "<script>
                     setTimeout(function() {
                         window.location.href = 'admin/dashboard.php';
                     }, 2000);
                 </script>";
+            }else{
+                echo "<script>
+                setTimeout(function() {
+                    window.location.href = 'users/index.php';
+                }, 2000);
+            </script>";
+            }
+            
         }else{
             $msg = "Email and Password Not Valid";
                     echo "<script>
