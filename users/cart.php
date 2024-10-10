@@ -1,44 +1,14 @@
 <?php 
- include('../admin/Common.php');
+    
+    include('../admin/checkUser.php');
 
- $common = new Common();
+    include('../admin/Common.php');
 
-    $uId = isset($_GET['userId']);
-
-    if(isset($_GET['productId']) && isset($_GET['userId'])){
-        $userid = $_GET['userId'];
-        $productid = $_GET['productId'];
-
-       
-
-        $data = $common->productFetchSingleRecord($productid);
+    $common = new Common();
 
     
-        $product = $data['product'];
-        $image = $data['image'];
-        $price = $data['price'];
-        $qty = $data['qty'];
 
-        $res = $common->addCart($userid,$productid,$product,$image,$price,$qty);
-        $msg = "";
-        // if ($res) {
-        //     $msg = "Product successfully Add Cart";
-        //     echo "<script>
-        //             setTimeout(function() {
-        //                 window.location.href = 'cart.php';
-        //             }, 2000);
-        //         </script>";
-        // }
-
-
-        
-
-        
-
-    }
-
-    $allcart = $common->viewCart($uId);
-    
+    $allcart = $common->viewCart($_SESSION['userid']);    
 
     if(isset($_GET['deleteid'])){
         $deleteid = $_GET['deleteid'];
@@ -69,7 +39,11 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <?php include('header.php') ?>
+    <?php 
+    
+        include('header.php');
+        
+    ?>
     <div class="container mt-5">
         <h2 class="mb-4">Shopping Cart</h2>
 

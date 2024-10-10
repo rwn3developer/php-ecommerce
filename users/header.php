@@ -1,4 +1,4 @@
-<?php session_start(); ?>
+
 <header class="bg-dark p-2">
         <div class="container">
         <nav class="navbar navbar-expand-lg">

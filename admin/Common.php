@@ -138,7 +138,8 @@
         }
 
         function viewCart($userid){
-            $res = mysqli_query($this->con,"SELECT * FROM `cart` WHERE `userid`='$userid'");
+            
+            $res = mysqli_query($this->con,"SELECT * FROM `cart` WHERE `userId`='$userid'");
             $record = array();
             while($row = mysqli_fetch_array($res)){
                 $record[] = $row;

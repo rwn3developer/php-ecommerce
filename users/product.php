@@ -6,7 +6,30 @@
     $common = new Common();
 
     $products = $common->productView();
-    
+
+   
+    if(isset($_GET['productId']) && isset($_GET['userId'])){
+        $userid = $_GET['userId'];
+        $productid = $_GET['productId'];
+
+        $data = $common->productFetchSingleRecord($productid);
+
+        $product = $data['product'];
+        $image = $data['image'];
+        $price = $data['price'];
+        $qty = $data['qty'];
+
+        $res = $common->addCart($userid,$productid,$product,$image,$price,$qty);
+        $msg = "";
+        if ($res) {
+            $msg = "Product successfully Add Cart";
+            echo "<script>
+                    setTimeout(function() {
+                        window.location.href = 'cart.php';
+                    }, 2000);
+                </script>";
+        }
+    }
 ?>
 
 <!doctype html>
@@ -40,7 +63,7 @@
                                 <h5 class="card-title">Price :- <?php echo $p['price'] ?></h5>
 
                                 <p class="card-text"><?php echo $p['description'] ?></p>
-                                <a href="cart.php?productId=<?php echo $p['id'] ?>&userId=<?php echo $_SESSION['userid'] ?>" class="btn btn-primary">Add Cart</a>
+                                <a href="product.php?productId=<?php echo $p['id'] ?>&userId=<?php echo $_SESSION['userid'] ?>" class="btn btn-primary">Add Cart</a>
                             </div>
                         </div>
                     </div>
